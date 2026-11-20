@@ -66,13 +66,23 @@ added: v4.0.0
   * `stripHeadersOnCrossOriginRedirect` {string[]} Additional header names to
     remove from the request when a redirect points to a different origin.
     **Default:** `null`.
+  * `redirectAuthorization` {Record<string, string>} Per-origin
+    `authorization` header values trusted on redirect hops, keyed by origin
+    (protocol, host and effective port). When a cross-origin redirect strips
+    the current `authorization` header, the target origin's own entry fills
+    the resulting blank on the next request; an explicit header still in
+    scope on a same-origin chain is forwarded untouched. A target origin
+    without an entry sends no `authorization` header, and credentials from a
+    previous hop are never carried over to another origin. **Default:**
+    `null`.
 * `handler` {DispatchHandler} The downstream handler that receives the lifecycle
   callbacks for the final response.
 
 Throws an [`InvalidArgumentError`][] when `maxRedirections` is not a non-negative
-integer, when `throwOnMaxRedirect` is not a boolean, or when either
+integer, when `throwOnMaxRedirect` is not a boolean, when either
 `stripHeadersOnRedirect` or `stripHeadersOnCrossOriginRedirect` is not an array of
-header-name strings.
+header-name strings, or when `redirectAuthorization` is not an object mapping
+origin strings to string values.
 
 ```mjs
 import { Client, RedirectHandler } from 'undici'

@@ -8,7 +8,20 @@ export default Interceptors
 declare namespace Interceptors {
   export type DumpInterceptorOpts = { maxSize?: number }
   export type RetryInterceptorOpts = RetryHandler.RetryOptions
-  export type RedirectInterceptorOpts = { maxRedirections?: number, throwOnMaxRedirect?: boolean, stripHeadersOnRedirect?: string[], stripHeadersOnCrossOriginRedirect?: string[] }
+  export type RedirectInterceptorOpts = {
+    maxRedirections?: number,
+    throwOnMaxRedirect?: boolean,
+    stripHeadersOnRedirect?: string[],
+    stripHeadersOnCrossOriginRedirect?: string[],
+    /**
+     * Per-origin `authorization` header values trusted on redirect hops.
+     * Keyed by origin (protocol, host and effective port); each redirect hop
+     * only consults the entry for its own target origin. An origin without an
+     * entry sends no `authorization` header unless the request's own explicit
+     * header is still in scope on a same-origin chain.
+     */
+    redirectAuthorization?: Record<string, string>
+  }
   export type DecompressInterceptorOpts = {
     skipErrorResponses?: boolean
     skipStatusCodes?: number[]

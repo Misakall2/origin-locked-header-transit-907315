@@ -173,8 +173,20 @@ Follows HTTP redirects (3xx responses) automatically.
     remove from the request when following a cross-origin redirect (i.e. the
     redirect target has a different origin). Useful for stripping
     `Authorization` on cross-origin hops. **Default:** `[]`.
+  * `redirectAuthorization` {Record<string, string>} Per-origin
+    `authorization` header values trusted on redirect hops, keyed by origin
+    (protocol, host and effective port — `http://example.com` and
+    `http://example.com:80` are the same key). When a cross-origin redirect
+    strips the current `authorization` header, the target origin's own entry,
+    if present, fills the resulting blank on the next request. An explicit
+    `authorization` header still in scope on a same-origin chain is forwarded
+    untouched and is not substituted. A target origin without an entry sends
+    no `authorization` header: a credential from a previous hop or from the
+    initial request is never reused to fill it. The explicit header supplied
+    on the initial request is dropped on the first cross-origin hop and is not
+    restored if a later hop returns to the entry origin. **Default:** `null`.
 
-Per-request override: any of the four options above can also be set directly
+Per-request override: any of the options above can also be set directly
 on the dispatch options to override the interceptor defaults for a specific
 request.
 
